@@ -1,11 +1,38 @@
 import sys
 import time
+import serial
 from zwift import Client
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QMessageBox
 )
 
+MAX_BUFF_LEN = 255
+SETUP 		 = False
+port 		 = None
 
+prev = time.time()
+while(not SETUP):
+	try:
+		port = serial.Serial("COM4", 115200, timeout=1)
+	except: # Bad way of writing excepts (always know your errors)
+		if(time.time() - prev > 2): # Don't spam with msg
+			print("No serial detected, please plug your uController")
+			prev = time.time()
+
+	if(port is not None): # We're connected
+		SETUP = True
+		print("Connected...")
+          
+# read one char (default)
+def read_ser(num_char = 1):
+    string = port.read(num_char)
+    return string.decode()
+
+# Write whole strings
+def write_ser(cmd):
+    cmd = cmd + '\n'
+    port.write(cmd.encode())
+     
 class ZwiftApp(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -64,12 +91,15 @@ class ZwiftApp(QMainWindow):
         try:
             while world.world_id == 1:
                 player_status = world.player_status(player_id)
-                speed = player_status.player_state.__getattribute__("speed") * 0.00001
-                print("Vitesse actuelle du joueur :", speed)
+                speed = player_status.player_state.__getattribute__("speed") * 0.000001
+                write_ser(str(speed))
+                string = read_ser(MAX_BUFF_LEN)
+                if(len(string)):
+                    print(string)
                 time.sleep(1)
+
         except Exception as e:
             QMessageBox.critical(self, "Erreur", f"Erreur dans le suivi de la vitesse : {e}")
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
