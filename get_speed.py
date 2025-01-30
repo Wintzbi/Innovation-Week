@@ -94,14 +94,18 @@ class ZwiftApp(QMainWindow):
                 player_status = world.player_status(player_id)
                 speed = player_status.player_state.__getattribute__("speed") * 0.000001
                 power = player_status.player_state.__getattribute__("power")
-                write_ser(str(speed)+','+str(25))
+                calories = player_status.player_state.__getattribute__("calories") * 0.001
+                heartrate = player_status.player_state.__getattribute__("heartrate")
+                distance = player_status.player_state.__getattribute__("distance") * 0.001
+                cadence = player_status.player_state.__getattribute__("cadenceUHz") * 0.0001
+                write_ser(str(speed)+','+str(power)+','+str(calories)+','+str(heartrate)+','+str(distance)+','+str(cadence))
                 string = read_ser(MAX_BUFF_LEN)
                 if(len(string)):
                     print(string)
-                time.sleep(1)
+                time.sleep(0.4)
 
         except Exception as e:
-            QMessageBox.critical(self, "Erreur", f"Erreur dans le suivi de la vitesse : {e}")
+            QMessageBox.critical(self, "Erreur", f"Erreur dans le suivi de la vi@tesse : {e}")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
