@@ -18,6 +18,7 @@ while(not SETUP):
 		if(time.time() - prev > 2): # Don't spam with msg
 			print("No serial detected, please plug your uController")
 			prev = time.time()
+            
 
 	if(port is not None): # We're connected
 		SETUP = True
@@ -92,7 +93,8 @@ class ZwiftApp(QMainWindow):
             while world.world_id == 1:
                 player_status = world.player_status(player_id)
                 speed = player_status.player_state.__getattribute__("speed") * 0.000001
-                write_ser(str(speed))
+                power = player_status.player_state.__getattribute__("power")
+                write_ser(str(speed)+','+str(25))
                 string = read_ser(MAX_BUFF_LEN)
                 if(len(string)):
                     print(string)
@@ -106,3 +108,8 @@ if __name__ == "__main__":
     window = ZwiftApp()
     window.show()
     sys.exit(app.exec_())
+
+
+
+
+
