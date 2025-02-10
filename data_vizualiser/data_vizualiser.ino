@@ -3,7 +3,7 @@
 
 #define MAX_BUFF_LEN  255
 #define pin_avant 22
-#define NUM_LEDS 144
+#define NUM_LEDS 128
 #define DATA_PIN 27
 
 CRGB leds[NUM_LEDS];
