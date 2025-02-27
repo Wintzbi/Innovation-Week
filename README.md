@@ -14,6 +14,6 @@ pour ajouter ou modifier les poses détectés, il suffit de rajouter des conditi
 
 Via API ne pas oublier d'installer la bibliothèque Zwift:
 ```
-pip install zwift
+pip install zwift-client
 ```
 Envoie toutes les données dans une esp32 cheap yellow display qui affiche les données et les utilises pour une led et un ventilateur
